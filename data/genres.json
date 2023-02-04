@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "genre": "Construction"
+    },
+    {
+        "id": 2,
+        "genre": "Nature"
+    },
+    {
+        "id": 3,
+        "genre": "Cooking"
+    },
+    {
+        "id": 4,
+        "genre": "Sports"
+    }
+]
