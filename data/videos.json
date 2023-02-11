@@ -3,33 +3,33 @@
         "id": 1,
         "title": "Butterfly emerges",
         "description": "A caterpillar enters and emerges from a cocoon",
-        "postDate": "2023-01-01",
+        "date": "2023-01-01",
         "length": 2,
         "likes": 100,
         "comments": ["super dope!"],
-        "thumbnail": "https://i.ytimg.com/an_webp/pgtmlVqCKxc/mqdefault_6s.webp?du=3000&sqp=CNWK9p4G&rs=AOn4CLCiFbFjekFVYS1Bqdm8g25qRinwBQ",
+        "videomp4": "https://i.ytimg.com/an_webp/pgtmlVqCKxc/mqdefault_6s.webp?du=3000&sqp=CNWK9p4G&rs=AOn4CLCiFbFjekFVYS1Bqdm8g25qRinwBQ",
         "genre": 2
     },
     {
         "id": 1,
         "title": "House emerges",
         "description": "A house is built in 3 seconds",
-        "postDate": "2023-02-01",
+        "date": "2023-02-01",
         "length": 3,
         "likes": 1,
         "comments": ["didn't know took that long!"],
-        "thumbnail": "https://i.ytimg.com/an_webp/-KDNFBgHdBc/mqdefault_6s.webp?du=3000&sqp=CMqf9p4G&rs=AOn4CLBx6o10xcciV_-_sZ61hKQ47jv2rw",
+        "videomp4": "https://i.ytimg.com/an_webp/-KDNFBgHdBc/mqdefault_6s.webp?du=3000&sqp=CMqf9p4G&rs=AOn4CLBx6o10xcciV_-_sZ61hKQ47jv2rw",
         "genre": 1
     },
     {
         "id": 1,
         "title": "Pretzel emerges",
         "description": "A pretzel is born!",
-        "postDate": "2023-01-01",
+        "date": "2023-01-01",
         "length": 3,
         "likes": 2,
         "comments": ["yum"],
-        "thumbnail": "https://i.ytimg.com/an_webp/d5Wa1Qdi-t4/mqdefault_6s.webp?du=3000&sqp=COSC9p4G&rs=AOn4CLANoKo_H4P0Raen8IQwaH37CN1vrg",
+        "videomp4": "http://res.cloudinary.com/dev8otxwf/image/upload/v1676073698/wszqcvgcqmbtn5hkdqr8.png",
         "genre": 3
     }
 ]
