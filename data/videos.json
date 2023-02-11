@@ -7,8 +7,8 @@
         "length": 2,
         "likes": 100,
         "comments": ["super dope!"],
-        "videomp4": "https://i.ytimg.com/an_webp/pgtmlVqCKxc/mqdefault_6s.webp?du=3000&sqp=CNWK9p4G&rs=AOn4CLCiFbFjekFVYS1Bqdm8g25qRinwBQ",
-        "genre": 2
+        "videoFile": "https://i.ytimg.com/an_webp/pgtmlVqCKxc/mqdefault_6s.webp?du=3000&sqp=CNWK9p4G&rs=AOn4CLCiFbFjekFVYS1Bqdm8g25qRinwBQ",
+        "tag": 2
     },
     {
         "id": 1,
@@ -18,8 +18,8 @@
         "length": 3,
         "likes": 1,
         "comments": ["didn't know took that long!"],
-        "videomp4": "https://i.ytimg.com/an_webp/-KDNFBgHdBc/mqdefault_6s.webp?du=3000&sqp=CMqf9p4G&rs=AOn4CLBx6o10xcciV_-_sZ61hKQ47jv2rw",
-        "genre": 1
+        "videoFile": "https://i.ytimg.com/an_webp/-KDNFBgHdBc/mqdefault_6s.webp?du=3000&sqp=CMqf9p4G&rs=AOn4CLBx6o10xcciV_-_sZ61hKQ47jv2rw",
+        "tag": 1
     },
     {
         "id": 1,
@@ -29,7 +29,7 @@
         "length": 3,
         "likes": 2,
         "comments": ["yum"],
-        "videomp4": "http://res.cloudinary.com/dev8otxwf/image/upload/v1676073698/wszqcvgcqmbtn5hkdqr8.png",
-        "genre": 3
+        "videoFile": "http://res.cloudinary.com/dev8otxwf/image/upload/v1676073698/wszqcvgcqmbtn5hkdqr8.png",
+        "tag": 3
     }
 ]

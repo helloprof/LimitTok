@@ -66,7 +66,7 @@ app.get("/new", (req, res) => {
   res.sendFile(path.join(__dirname, "/views/newBrief.html"))
 })
 
-app.post("/new", upload.single("upload"), (req, res) => {
+app.post("/new", upload.single("videoFile"), (req, res) => {
   if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
@@ -97,8 +97,8 @@ app.post("/new", upload.single("upload"), (req, res) => {
     processPost("");
   }
 
-  function processPost(imageUrl) {
-    req.body.upload = imageUrl;
+  function processPost(videoURL) {
+    req.body.videoFile = videoURL;
     videoService.addBrief(req.body).then(() => {
       res.redirect("/videos")
     }).catch((err) => {
