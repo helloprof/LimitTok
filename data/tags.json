@@ -1,18 +1,18 @@
 [
     {
         "id": 1,
-        "genre": "Construction"
+        "tag": "Construction"
     },
     {
         "id": 2,
-        "genre": "Nature"
+        "tag": "Nature"
     },
     {
         "id": 3,
-        "genre": "Cooking"
+        "tag": "Cooking"
     },
     {
         "id": 4,
-        "genre": "Memes"
+        "tag": "Memes"
     }
 ]
