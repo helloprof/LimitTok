@@ -1,6 +1,6 @@
 const fs = require("fs")
 let videos = []
-let genres = []
+let tags = []
 
 module.exports.initialize = () => {
     return new Promise((resolve, reject) => {
@@ -8,15 +8,13 @@ module.exports.initialize = () => {
             if(err) {
                 reject()
             } else {
-                console.log(data)
                 videos = JSON.parse(data)
 
-                fs.readFile('./data/genres.json', 'utf8', (err, data) => {
+                fs.readFile('./data/tags.json', 'utf8', (err, data) => {
                     if(err) {
                         reject()
                     } else {
-                        console.log(data)
-                        genres = JSON.parse(data)
+                        tags = JSON.parse(data)
                         resolve()
                     }
                 })
@@ -25,10 +23,10 @@ module.exports.initialize = () => {
     })
 }
 
-module.exports.getGenres = () => {
+module.exports.getTags = () => {
     return new Promise((resolve, reject) => {
-        if (genres.length > 0 ) {
-            resolve(genres)
+        if (tags.length > 0 ) {
+            resolve(tags)
         } else {
             reject("no genres")
         }
@@ -42,5 +40,34 @@ module.exports.getVideos = () => {
         } else {
             reject("no videos")
         }
+    })
+}
+
+module.exports.addBrief = (briefData) => {
+    return new Promise((resolve, reject) => {
+        if (briefData) {
+            briefData.id = videos.length + 1
+            briefData.date = new Date()
+            videos.push(briefData)
+            console.log(briefData)
+            resolve("success!")
+        } else {
+            reject("failed!")
+        }
+
+    })
+}
+
+module.exports.addTag = (tagData) => {
+    return new Promise((resolve, reject) => {
+        if (tagData) {
+            tagData.id = tags.length + 1
+            tags.push(tagData)
+            console.log(tagData)
+            resolve("success!")
+        } else {
+            reject("failed!")
+        }
+
     })
 }
