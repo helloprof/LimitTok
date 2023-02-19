@@ -6,6 +6,10 @@ const cloudinary = require('cloudinary').v2
 const streamifier = require('streamifier')
 const env = require("dotenv")
 env.config()
+const exphbs = require("express-handlebars");
+
+app.engine('.hbs', exphbs.engine({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
 
 const videoService = require("./videoService")
 
@@ -29,7 +33,17 @@ function onHttpStart() {
 app.use(express.static("public"))
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/index.html"))
+  videoService.getVideos().then((videos) => {
+    res.render('index', {
+      data: videos,
+      layout: 'main'
+    })
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
+
+  // res.sendFile(path.join(__dirname, "/views/index.html"))
 })
 
 app.get("/tags", (req, res) => {
@@ -41,15 +55,27 @@ app.get("/tags", (req, res) => {
   })
 })
 
-app.get("/tags/add", (req, res) => {
-  res.sendFile(path.join(__dirname,"/views/newTag.html"))
+app.get("/tags/new", (req, res) => {
+
+  // var a = [{id:1, tag: "blah"},{id: 2, tag: "blah blah"}]
+  videoService.getTags().then((tags) => {
+    res.render('newTag', {
+      data: tags,
+      layout: 'main'
+    })
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
+
+  // res.sendFile(path.join(__dirname,"/views/newTag.html"))
 })
 
-app.post("/tags/add", (req, res) => {
+app.post("/tags/new", (req, res) => {
   videoService.addTag(req.body).then(() => {
-    res.redirect("/tags")
+    res.redirect("/tags/new")
   }).catch((err)=> {
-    res.redirect("/tags/add")
+    res.redirect("/tags/new")
   })
 })
 
@@ -62,15 +88,26 @@ app.get("/videos", (req, res) => {
   })
 })
 
-app.get("/new", (req, res) => {
-  res.sendFile(path.join(__dirname, "/views/newBrief.html"))
+app.get("/videos/new", (req, res) => {
+
+  videoService.getTags().then((tags) => {
+    res.render('newBrief', {
+      data: tags,
+      layout: 'main'
+    })
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
+  // res.sendFile(path.join(__dirname, "/views/newBrief.html"))
 })
 
-app.post("/new", upload.single("videoFile"), (req, res) => {
+app.post("/videos/new", upload.single("videoFile"), (req, res) => {
   if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
         let stream = cloudinary.uploader.upload_stream(
+          {resource_type: "video"},
           (error, result) => {
             if (result) {
               resolve(result);
@@ -100,9 +137,9 @@ app.post("/new", upload.single("videoFile"), (req, res) => {
   function processPost(videoURL) {
     req.body.videoFile = videoURL;
     videoService.addBrief(req.body).then(() => {
-      res.redirect("/videos")
+      res.redirect("/")
     }).catch((err) => {
-      res.redirect("/new")
+      res.redirect("/videos/new")
     })
   }
 
