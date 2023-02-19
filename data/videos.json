@@ -1,35 +1,14 @@
 [
     {
         "id": 1,
-        "title": "Butterfly emerges",
-        "description": "A caterpillar enters and emerges from a cocoon",
-        "date": "2023-01-01",
-        "length": 2,
-        "likes": 100,
-        "comments": ["super dope!"],
-        "videoFile": "https://i.ytimg.com/an_webp/pgtmlVqCKxc/mqdefault_6s.webp?du=3000&sqp=CNWK9p4G&rs=AOn4CLCiFbFjekFVYS1Bqdm8g25qRinwBQ",
-        "tag": 2
-    },
-    {
-        "id": 1,
         "title": "House emerges",
         "description": "A house is built in 3 seconds",
         "date": "2023-02-01",
         "length": 3,
         "likes": 1,
         "comments": ["didn't know took that long!"],
-        "videoFile": "https://i.ytimg.com/an_webp/-KDNFBgHdBc/mqdefault_6s.webp?du=3000&sqp=CMqf9p4G&rs=AOn4CLBx6o10xcciV_-_sZ61hKQ47jv2rw",
+        "videoFile": "/videos/house.mp4",
         "tag": 1
-    },
-    {
-        "id": 1,
-        "title": "Pretzel emerges",
-        "description": "A pretzel is born!",
-        "date": "2023-01-01",
-        "length": 3,
-        "likes": 2,
-        "comments": ["yum"],
-        "videoFile": "http://res.cloudinary.com/dev8otxwf/image/upload/v1676073698/wszqcvgcqmbtn5hkdqr8.png",
-        "tag": 3
     }
+
 ]
