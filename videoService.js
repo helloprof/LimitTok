@@ -43,6 +43,28 @@ module.exports.getVideos = () => {
     })
 }
 
+module.exports.getVideoByID = (id) => {
+    return new Promise((resolve, reject) => {
+        const videoArray = videos.filter(vid => vid.id == id )
+        if (videoArray) {
+            resolve(videoArray)
+        } else {
+            reject("no videos")
+        }
+    })
+}
+
+module.exports.getVideoByTag = (tag) => {
+    return new Promise((resolve, reject) => {
+        const videoArray = videos.filter(vid => vid.tag == tag )
+        if (videoArray) {
+            resolve(videoArray)
+        } else {
+            reject("no videos")
+        }
+    })
+}
+
 module.exports.addBrief = (briefData) => {
     return new Promise((resolve, reject) => {
         if (briefData) {
