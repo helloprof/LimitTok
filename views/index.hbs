@@ -4,12 +4,14 @@
     <source src="{{videoFile}}" type="video/mp4">
   </video>
   <div class="card-body">
-    <h5 class="card-title">{{title}}</h5>
+    <h5 class="card-title">{{#strong}}{{title}}{{/strong}}</h5>
     <p class="card-text">{{date}}</p>
     <p class="card-text">{{description}}</p>
     <a href="#" class="btn btn-primary">Likes</a>
     <a href="#" class="btn btn-dark">Comments</a>
-    <a href="#" class="btn btn-danger">{{tag}}</a>
+    <a href="/videos/tag/{{tag}}" class="btn btn-primary">{{tag}}</a>
+    <a href="/videos/{{id}}" class="btn btn-success">More Info</a>
+
   </div>
 </div>
 {{else}}
