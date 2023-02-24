@@ -8,7 +8,13 @@ const env = require("dotenv")
 env.config()
 const exphbs = require("express-handlebars");
 
-app.engine('.hbs', exphbs.engine({ extname: '.hbs' }));
+app.engine('.hbs', exphbs.engine({ extname: '.hbs',
+  helpers: { 
+    strong: function(options){
+      return '<strong>' + options.fn(this) + '</strong>';
+    }
+  }
+}));
 app.set('view engine', '.hbs');
 
 const videoService = require("./videoService")
@@ -88,6 +94,19 @@ app.get("/videos", (req, res) => {
   })
 })
 
+
+app.get("/videos/tag/:tag", (req, res) => {
+  videoService.getVideoByTag(req.params.tag).then((videos) => {
+    res.render('index', {
+      data: videos,
+      layout: 'main'
+    })
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
+})
+
 app.get("/videos/new", (req, res) => {
 
   videoService.getTags().then((tags) => {
@@ -143,6 +162,18 @@ app.post("/videos/new", upload.single("videoFile"), (req, res) => {
     })
   }
 
+})
+
+app.get("/videos/:id", (req, res) => {
+  videoService.getVideoByID(req.params.id).then((video) => {
+    res.render('index', {
+      data: video,
+      layout: 'main'
+    })
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
 })
 
 app.use((req, res) => {
