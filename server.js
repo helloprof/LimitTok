@@ -12,7 +12,13 @@ app.engine('.hbs', exphbs.engine({ extname: '.hbs',
   helpers: { 
     strong: function(options){
       return '<strong>' + options.fn(this) + '</strong>';
-    }
+    },
+    formatDate: function(dateObj){ 
+      let year = dateObj.getFullYear(); 
+      let month = (dateObj.getMonth() + 1).toString(); 
+      let day = dateObj.getDate().toString(); 
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`; 
+  } 
   }
 }));
 app.set('view engine', '.hbs');
@@ -82,6 +88,15 @@ app.post("/tags/new", (req, res) => {
     res.redirect("/tags/new")
   }).catch((err)=> {
     res.redirect("/tags/new")
+  })
+})
+
+app.get("/tags/delete/:id", (req, res) => {
+  videoService.deleteTag(req.params.id).then(() => {
+    res.redirect("/tags/new")
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
   })
 })
 
@@ -162,6 +177,24 @@ app.post("/videos/new", upload.single("videoFile"), (req, res) => {
     })
   }
 
+})
+
+app.get("/videos/delete/:id", (req, res) => {
+  videoService.deleteVideo(req.params.id).then(() => {
+    res.redirect("/")
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
+})
+
+app.get("/videos/likes/:id", (req, res) => {
+  videoService.addLikeByVideo(req.params.id).then(() => {
+    res.redirect("/")
+  }).catch((err) => {
+    console.log(err)
+    res.send(err)
+  })
 })
 
 app.get("/videos/:id", (req, res) => {
