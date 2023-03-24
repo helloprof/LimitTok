@@ -40,22 +40,6 @@ Video.belongsTo(Tag, {foreignKey: 'tag'})
 
 module.exports.initialize = () => {
     return new Promise((resolve, reject) => {
-        // fs.readFile('./data/videos.json', 'utf8', (err, data) => {
-        //     if(err) {
-        //         reject()
-        //     } else {
-        //         videos = JSON.parse(data)
-
-        //         fs.readFile('./data/tags.json', 'utf8', (err, data) => {
-        //             if(err) {
-        //                 reject()
-        //             } else {
-        //                 tags = JSON.parse(data)
-        //                 resolve()
-        //             }
-        //         })
-        //     }
-        // })
         sequelize.sync().then(() => {
             console.log("POST GRES DB LOADED")
             resolve()
