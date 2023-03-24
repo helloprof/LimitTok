@@ -24,6 +24,7 @@ app.engine('.hbs', exphbs.engine({ extname: '.hbs',
 app.set('view engine', '.hbs');
 
 const videoService = require("./videoService")
+const authService = require("./authService")
 
 const upload = multer()
 
@@ -209,10 +210,54 @@ app.get("/videos/:id", (req, res) => {
   })
 })
 
+app.get("/register", (req, res) => {
+  res.render('register', {
+    layout: 'main'
+  })
+})
+
+app.post("/register", (req, res) => {
+  authService.registerUser(req.body).then(() => {
+    res.render('register', {
+      successMessage: "USER CREATED SUCCESSFULLY!",
+      layout: 'main'
+    })
+  }).catch((err)=> {
+    console.log(err)
+    res.render('register', {
+      errorMessage: err,
+      layout: 'main'
+    })
+  })
+})
+
+app.get("/login", (req, res) => {
+  res.render('login', {
+    layout: 'main'
+  })
+})
+
+app.post("/login", (req, res) => {
+  authService.loginUser(req.body).then(() => {
+    res.redirect("/")
+  }).catch((err)=> {
+    console.log(err)
+    res.render('login', {
+      errorMessage: err,
+      layout: 'main'
+    })
+  })
+})
+
+
 app.use((req, res) => {
   res.status(404).send("Page Not Found")
 })
 
-videoService.initialize().then(() => {
+videoService.initialize()
+.then(authService.initialize)
+.then(() => {
   app.listen(HTTP_PORT, onHttpStart)
+}).catch((err) => {
+  console.log(err)
 })
