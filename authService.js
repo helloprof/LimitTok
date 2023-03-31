@@ -1,5 +1,6 @@
 var mongoose = require("mongoose")
 var Schema = mongoose.Schema;
+const bcrypt = require('bcryptjs')
 
 var userSchema = new Schema({
     "username": {
@@ -37,17 +38,23 @@ module.exports.registerUser = function(userData) {
         if (userData.password != userData.password2) {
             reject("PASSWORDS DO NOT MATCH")
         } else {
-            let newUser = new User(userData)
-            newUser.save().then(() => {
-                resolve()
+            bcrypt.hash(userData.password, 10).then((hash) => {
+                userData.password = hash
+                let newUser = new User(userData)
+                newUser.save().then(() => {
+                    resolve()
+                }).catch((err) => {
+                    if(err.code == 11000) {
+                        console.log("USERNAME TAKEN")
+                        reject("USERNAME ALREADY TAKEN!")
+                    } else {
+                        reject(err)
+                    }
+                })
             }).catch((err) => {
-                if(err.code == 11000) {
-                    console.log("USERNAME TAKEN")
-                    reject("USERNAME ALREADY TAKEN!")
-                } else {
-                    reject(err)
-                }
+                reject("PASSWORD ENCRYPTION ERROR")
             })
+
         }
     })
 }
@@ -60,12 +67,29 @@ module.exports.loginUser = function(userData) {
             if(!user) {
                 reject("USER NOT FOUND!")
             } else {
-                if (userData.password == user.password) {
-                    resolve()
-                } else {
-                    console.log(userData.password, user.password)
-                    reject("INCORRECT PASSWORD!")
-                }
+                bcrypt.compare(userData.password, user.password).then((result) => {
+                    if (result) {
+                        user.loginHistory.push({dateTime: new Date(), userAgent: userData.userAgent})
+                        User.updateOne(
+                            {username: user.username},
+                            {$set: {loginHistory: user.loginHistory}}
+                        ).then(() => {
+                            resolve(user)
+                        }).catch((err) => {
+                            reject("CANNOT UPDATE LOGIN HISTORY")
+                        })
+                    } else {
+                        reject("INCORRECT PASSWORD")
+                    }
+                }).catch((err) => {
+                    reject("PASSWORD COULD NOT BE DECRYPTED")
+                })
+                // if (userData.password == user.password) {
+                //     resolve()
+                // } else {
+                //     console.log(userData.password, user.password)
+                //     reject("INCORRECT PASSWORD!")
+                // }
             }
         }).catch((err) => {
             reject("DATABASE ERROR")
