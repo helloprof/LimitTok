@@ -7,6 +7,7 @@ const streamifier = require('streamifier')
 const env = require("dotenv")
 env.config()
 const exphbs = require("express-handlebars");
+const clientSessions = require("client-sessions");
 
 app.engine('.hbs', exphbs.engine({ extname: '.hbs',
   helpers: { 
@@ -45,7 +46,27 @@ function onHttpStart() {
 
 app.use(express.static("public"))
 
-app.get("/", (req, res) => {
+app.use(clientSessions({
+  cookieName: "session", // req.session
+  secret: "week10example_web322",
+  duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
+  activeDuration: 1000 * 60 // the session will be extended by this many ms each request (1 minute)
+})) 
+
+function ensureLogin(req, res, next) {
+  if (!req.session.user) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
+
+app.use(function(req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
+
+app.get("/", ensureLogin, (req, res) => {
   videoService.getVideos().then((videos) => {
     res.render('index', {
       data: videos,
@@ -59,7 +80,7 @@ app.get("/", (req, res) => {
   // res.sendFile(path.join(__dirname, "/views/index.html"))
 })
 
-app.get("/tags", (req, res) => {
+app.get("/tags", ensureLogin, (req, res) => {
   videoService.getTags().then((tags) => {
     res.json(tags)
   }).catch((err) => {
@@ -68,7 +89,7 @@ app.get("/tags", (req, res) => {
   })
 })
 
-app.get("/tags/new", (req, res) => {
+app.get("/tags/new", ensureLogin, (req, res) => {
 
   // var a = [{id:1, tag: "blah"},{id: 2, tag: "blah blah"}]
   videoService.getTags().then((tags) => {
@@ -84,7 +105,7 @@ app.get("/tags/new", (req, res) => {
   // res.sendFile(path.join(__dirname,"/views/newTag.html"))
 })
 
-app.post("/tags/new", (req, res) => {
+app.post("/tags/new", ensureLogin, (req, res) => {
   videoService.addTag(req.body).then(() => {
     res.redirect("/tags/new")
   }).catch((err)=> {
@@ -92,7 +113,7 @@ app.post("/tags/new", (req, res) => {
   })
 })
 
-app.get("/tags/delete/:id", (req, res) => {
+app.get("/tags/delete/:id", ensureLogin, (req, res) => {
   videoService.deleteTag(req.params.id).then(() => {
     res.redirect("/tags/new")
   }).catch((err) => {
@@ -101,7 +122,7 @@ app.get("/tags/delete/:id", (req, res) => {
   })
 })
 
-app.get("/videos", (req, res) => {
+app.get("/videos", ensureLogin, (req, res) => {
   videoService.getVideos().then((videos) => {
     res.json(videos)
   }).catch((err) => {
@@ -111,7 +132,7 @@ app.get("/videos", (req, res) => {
 })
 
 
-app.get("/videos/tag/:tag", (req, res) => {
+app.get("/videos/tag/:tag", ensureLogin, (req, res) => {
   videoService.getVideoByTag(req.params.tag).then((videos) => {
     res.render('index', {
       data: videos,
@@ -123,7 +144,7 @@ app.get("/videos/tag/:tag", (req, res) => {
   })
 })
 
-app.get("/videos/new", (req, res) => {
+app.get("/videos/new", ensureLogin, (req, res) => {
 
   videoService.getTags().then((tags) => {
     res.render('newBrief', {
@@ -137,7 +158,7 @@ app.get("/videos/new", (req, res) => {
   // res.sendFile(path.join(__dirname, "/views/newBrief.html"))
 })
 
-app.post("/videos/new", upload.single("videoFile"), (req, res) => {
+app.post("/videos/new", ensureLogin, upload.single("videoFile"), (req, res) => {
   if (req.file) {
     let streamUpload = (req) => {
       return new Promise((resolve, reject) => {
@@ -180,7 +201,7 @@ app.post("/videos/new", upload.single("videoFile"), (req, res) => {
 
 })
 
-app.get("/videos/delete/:id", (req, res) => {
+app.get("/videos/delete/:id", ensureLogin, (req, res) => {
   videoService.deleteVideo(req.params.id).then(() => {
     res.redirect("/")
   }).catch((err) => {
@@ -189,7 +210,7 @@ app.get("/videos/delete/:id", (req, res) => {
   })
 })
 
-app.get("/videos/likes/:id", (req, res) => {
+app.get("/videos/likes/:id", ensureLogin, (req, res) => {
   videoService.addLikeByVideo(req.params.id).then(() => {
     res.redirect("/")
   }).catch((err) => {
@@ -198,7 +219,7 @@ app.get("/videos/likes/:id", (req, res) => {
   })
 })
 
-app.get("/videos/:id", (req, res) => {
+app.get("/videos/:id", ensureLogin, (req, res) => {
   videoService.getVideoByID(req.params.id).then((video) => {
     res.render('index', {
       data: video,
@@ -238,7 +259,14 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  authService.loginUser(req.body).then(() => {
+  req.body.userAgent = req.get('User-Agent');
+  authService.loginUser(req.body).then((user) => {
+    req.session.user = {
+      username: user.username,
+      email: user.email,
+      loginHistory: user.loginHistory
+    }
+
     res.redirect("/")
   }).catch((err)=> {
     console.log(err)
@@ -249,6 +277,16 @@ app.post("/login", (req, res) => {
   })
 })
 
+app.get("/loginHistory", ensureLogin, (req,res) => {
+  res.render('loginHistory', {
+    layout: 'main'
+  })
+})
+
+app.get("/logout", ensureLogin, (req, res) => {
+  req.session.reset();
+  res.redirect("/login");
+});
 
 app.use((req, res) => {
   res.status(404).send("Page Not Found")
